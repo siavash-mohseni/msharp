@@ -23,7 +23,7 @@ declare module './../../../node_modules/ionic-angular/components/nav/nav-control
         dismiss(data?: any): Promise<any>;
         currentPage(): ViewController;
         currentParam(paramName: string): any;
-        alert(title: string, message: string): void;
+        alert(message: string): void;
         confirm(message: string): Promise<boolean>;
         prompt(title: string, message: string, saveText: string, saveHandler: Function, cancelText: string, cancelHandler: Function, inputs: Array<PromptInputOptions>): void;
     }
@@ -70,10 +70,10 @@ NavController.prototype.currentParam = function (paramName: string): any {
 }
 
 //alert
-NavController.prototype.alert = function (title: string, message: string): void {
+NavController.prototype.alert = function (message: string): void {
     let alert = Alert.create({
-        title: title,
         message: message,
+        buttons: ['OK']
     });
     this.present(alert);
 }
