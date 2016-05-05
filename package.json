@@ -1,0 +1,19 @@
+{
+  "name": "msharp",
+  "version": "1.0.7",
+  "description": "msharp ionic library",
+  "main": "index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/siavashgeeks/msharp.git"
+  },
+  "author": "siavashgeeks <siavash.mohseni@geeks.ltd.uk>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/siavashgeeks/msharp/issues"
+  },
+  "homepage": "https://github.com/siavashgeeks/msharp#readme"
+}
