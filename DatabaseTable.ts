@@ -66,7 +66,11 @@
             var updated = !item.isNew;
 
             await item.onValidating();
-            await item.validate();
+            var validatoinResult = new ValidationResult();
+            await item.validate(validatoinResult);
+            if (validatoinResult.any()) {
+                throw new ValidationError(validatoinResult);
+            }
             await item.onSaving();
 
             var transaction = this.database.db.transaction(this.tableName, "readwrite");
@@ -87,7 +91,11 @@
                     var updated = !item.isNew;
 
                     await item.onValidating();
-                    await item.validate();
+                    var validatoinResult = new ValidationResult();
+                    await item.validate(validatoinResult);
+                    if (validatoinResult.any()) {
+                        throw new ValidationError(validatoinResult);
+                    }
                     await item.onSaving();
 
                     var transaction = this.database.db.transaction(this.tableName, "readwrite");

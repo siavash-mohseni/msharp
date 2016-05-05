@@ -15,7 +15,7 @@
 
         async onValidating(): Promise<void> { console.log('base validating'); }
 
-        async validate(): Promise<void> { console.log('base validate'); }
+        async validate(result: ValidationResult): Promise<void> { console.log('base validate'); }
 
         async onSaving(): Promise<void> { console.log('base onSaving'); }
 
