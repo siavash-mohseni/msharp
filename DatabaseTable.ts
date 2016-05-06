@@ -37,6 +37,9 @@
         }
 
         async get(id: string): Promise<T> {
+            if(!id)
+            return null;
+            
             var transaction = this.database.db.transaction(this.tableName, "readonly");
             var store = transaction.objectStore(this.tableName);
 
