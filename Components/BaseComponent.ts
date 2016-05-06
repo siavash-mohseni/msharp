@@ -8,11 +8,11 @@ export class BaseComponent {
         window.events = this.events;
 
         this.events.subscribe('Refresh', async () => {
-            await this.refresh();
+            await this.ngOnInit();
         });
     }
 
-    async refresh(): Promise<void> {
+    async ngOnInit(): Promise<void> {
     };
 
     async copyDataTo(to: Object): Promise<void> {
