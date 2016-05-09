@@ -145,6 +145,7 @@ interface String {
     isEmpty(): boolean;
     hasValue(): boolean;
     toHtmlLines(): string;
+    formatWith(...values: string[]): string;
 }
 
 String.prototype.contains = function (term: string = "", caseSensitive: boolean = true) {
@@ -167,3 +168,14 @@ String.prototype.hasValue = function () {
 String.prototype.toHtmlLines = function() {
     return this.replace(/\\r\\n/g, "<br />");
 }
+
+//String.Format Equivalent in TypeScript
+String.prototype.formatWith = function(...values: string[]) {
+    var str = this,
+        argumentsLength = arguments.length;
+
+    while (argumentsLength--) {
+        str = str.replace(new RegExp('\\{' + argumentsLength + '\\}', 'gm'), arguments[argumentsLength]);
+    }
+    return str;
+}; 
