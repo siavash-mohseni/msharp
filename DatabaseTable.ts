@@ -202,5 +202,41 @@
                 };
             });
         }
+
+        async deleteWhere(criteria: (item: T) => boolean = null): Promise<void> {
+            if (!criteria)
+                return;
+
+            var transaction = this.database.db.transaction(this.tableName, "readwrite");
+            var store = transaction.objectStore(this.tableName);
+
+            return new Promise<void>((resolve, reject) => {
+                var request = store.openCursor();
+
+                request.onsuccess = () => {
+
+                    if (request.result) {
+
+                        var cursor = request.result;
+                        if (cursor) {
+
+                            var item: T = new window["Domain"][this.className](cursor.value);
+
+                            if (criteria(item)) {
+                                store.delete(item.id);
+                                transaction.oncomplete = () => {
+                                    item.onDeleted();
+                                };
+                            }
+                            cursor.continue();
+                        }
+                    }
+                    else {
+                        resolve();
+                    }
+                };
+                request.onerror = e => { reject(e.target.error); };
+            });
+        }
     }
 }
