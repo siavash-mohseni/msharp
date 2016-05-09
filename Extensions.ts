@@ -144,6 +144,7 @@ interface String {
     contains(term: string, caseSensitive: boolean): boolean;
     isEmpty(): boolean;
     hasValue(): boolean;
+    toHtmlLines(): string;
 }
 
 String.prototype.contains = function (term: string = "", caseSensitive: boolean = true) {
@@ -161,4 +162,8 @@ String.prototype.isEmpty = function () {
 //Do not check null or undefined values with this
 String.prototype.hasValue = function () {
     return !(this.length === 0 || !this.trim());
+}
+
+String.prototype.toHtmlLines = function() {
+    return this.replace(/\\r\\n/g, "<br />");
 }
