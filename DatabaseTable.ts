@@ -98,6 +98,44 @@
             });
         }
 
+        async any(criteria: (item: T) => boolean): Promise<boolean> {
+            var transaction = this.database.db.transaction(this.tableName, "readonly");
+            var store = transaction.objectStore(this.tableName);
+
+            return new Promise<boolean>((resolve, reject) => {
+                var request = store.openCursor();
+
+                var result: boolean = false;
+
+                request.onsuccess = () => {
+
+                    if (request.result) {
+
+                        var cursor = request.result;
+                        if (cursor) {
+
+                            var item: T = new window["Domain"][this.className](cursor.value);
+
+                            if (!criteria || criteria(item)) {
+                                result = true;
+                                resolve(result);
+                                return;
+                            }
+                            cursor.continue();
+                        }
+                    }
+                    else {
+                        resolve(result);
+                    }
+                };
+                request.onerror = e => { reject(e.target.error); };
+            });
+        }
+
+        async none(criteria: (item: T) => boolean): Promise<boolean> {
+            return !(await this.any(criteria));
+        }
+
         async save(item: T): Promise<T> {
 
             var updated = !item.isNew;
