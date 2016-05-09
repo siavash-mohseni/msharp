@@ -145,7 +145,7 @@ interface String {
     isEmpty(): boolean;
     hasValue(): boolean;
     toHtmlLines(): string;
-    formatWith(...values: string[]): string;
+    formatWith(...values: any[]): string;
 }
 
 String.prototype.contains = function (term: string = "", caseSensitive: boolean = true) {
@@ -170,7 +170,7 @@ String.prototype.toHtmlLines = function() {
 }
 
 //String.Format Equivalent in TypeScript
-String.prototype.formatWith = function(...values: string[]) {
+String.prototype.formatWith = function(...values: any[]) {
     var str = this,
         argumentsLength = arguments.length;
 
