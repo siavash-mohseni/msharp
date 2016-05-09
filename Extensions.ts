@@ -6,7 +6,7 @@
     removeNulls(): Array<T>;
     any(change?: (item: T) => boolean): boolean;
     none(change?: (item: T) => boolean): boolean;
-    pushRange(): void;
+    pushRange(...arrays: Array<T>[]): void;
     remove(item: T): Array<T>;
 }
 
@@ -90,7 +90,7 @@ Array.prototype.removeNulls = function (): Array<any> {
     return array;
 }
 
-Array.prototype.pushRange = function () {
+Array.prototype.pushRange = function(...arrays: Array<any>[]) {
     var toPush = this.concat.apply([], arguments);
     for (var i = 0, len = toPush.length; i < len; ++i) {
         this.push(toPush[i]);
