@@ -22,9 +22,10 @@
 
                             var item: T = new window["Domain"][this.className](cursor.value);
 
-                            item.isNew = false;
-
-                            result.push(item);
+                            if (!criteria || criteria(item)) {
+                                item.isNew = false;
+                                result.push(item);
+                            }
                             cursor.continue();
                         }
                     }
@@ -37,9 +38,9 @@
         }
 
         async get(id: string): Promise<T> {
-            if(!id)
-            return null;
-            
+            if (!id)
+                return null;
+
             var transaction = this.database.db.transaction(this.tableName, "readonly");
             var store = transaction.objectStore(this.tableName);
 
@@ -62,7 +63,40 @@
             });
         }
 
-        async find(criteria: (item: T) => boolean): Promise<T> { return null; }
+        async find(criteria: (item: T) => boolean): Promise<T> {
+            var transaction = this.database.db.transaction(this.tableName, "readonly");
+            var store = transaction.objectStore(this.tableName);
+
+            return new Promise<T>((resolve, reject) => {
+                var request = store.openCursor();
+
+                var result: T = null;
+
+                request.onsuccess = () => {
+
+                    if (request.result) {
+
+                        var cursor = request.result;
+                        if (cursor) {
+
+                            var item: T = new window["Domain"][this.className](cursor.value);
+
+                            if (!criteria || criteria(item)) {
+                                item.isNew = false;
+                                result = item;
+                                resolve(result);
+                                return;
+                            }
+                            cursor.continue();
+                        }
+                    }
+                    else {
+                        resolve(result);
+                    }
+                };
+                request.onerror = e => { reject(e.target.error); };
+            });
+        }
 
         async save(item: T): Promise<T> {
 
