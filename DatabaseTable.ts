@@ -1,12 +1,26 @@
 ﻿namespace MSharp {
 
+    export interface IDatabaseTable {
+        table: string;
+        type: string;
+        sortable?: boolean;
+    }
+
     export class DatabaseTable<T extends Entity> {
 
-        constructor(public tableName: string, public className, public database: BaseDatabase) { }
+        table: string;
+        type: string;
+        sortable: boolean;
+
+        constructor(public database: BaseDatabase, info: IDatabaseTable) {
+            this.table = info.table;
+            this.type = info.type;
+            this.sortable = info.sortable || false;
+        }
 
         async getList(criteria: (item: T) => boolean = null): Promise<Array<T>> {
-            var transaction = this.database.db.transaction(this.tableName, "readonly");
-            var store = transaction.objectStore(this.tableName);
+            var transaction = this.database.db.transaction(this.table, "readonly");
+            var store = transaction.objectStore(this.table);
 
             return new Promise<Array<T>>((resolve, reject) => {
                 var request = store.openCursor();
@@ -20,7 +34,7 @@
                         var cursor = request.result;
                         if (cursor) {
 
-                            var item: T = new window["Domain"][this.className](cursor.value);
+                            var item: T = new window["Domain"][this.type](cursor.value);
 
                             if (!criteria || criteria(item)) {
                                 item.isNew = false;
@@ -30,6 +44,9 @@
                         }
                     }
                     else {
+
+                        if (this.sortable) result.sort((a, b) => a.compareTo(b));
+
                         resolve(result);
                     }
                 };
@@ -41,8 +58,8 @@
             if (!id)
                 return null;
 
-            var transaction = this.database.db.transaction(this.tableName, "readonly");
-            var store = transaction.objectStore(this.tableName);
+            var transaction = this.database.db.transaction(this.table, "readonly");
+            var store = transaction.objectStore(this.table);
 
             return new Promise<T>((resolve, reject) => {
                 var request = store.get(id);
@@ -51,12 +68,12 @@
                         var data = request.result;
                         data.IsNew = false;
 
-                        var result = new window["Domain"][this.className](data);
+                        var result = new window["Domain"][this.type](data);
 
                         resolve(result);
                     }
                     else {
-                        reject("Could not find a record in the table " + this.tableName + " with the id: " + id);
+                        reject("Could not find a record in the table " + this.table + " with the id: " + id);
                     }
                 };
                 request.onerror = e => { reject(e.target.error); };
@@ -64,8 +81,8 @@
         }
 
         async find(criteria: (item: T) => boolean): Promise<T> {
-            var transaction = this.database.db.transaction(this.tableName, "readonly");
-            var store = transaction.objectStore(this.tableName);
+            var transaction = this.database.db.transaction(this.table, "readonly");
+            var store = transaction.objectStore(this.table);
 
             return new Promise<T>((resolve, reject) => {
                 var request = store.openCursor();
@@ -79,7 +96,7 @@
                         var cursor = request.result;
                         if (cursor) {
 
-                            var item: T = new window["Domain"][this.className](cursor.value);
+                            var item: T = new window["Domain"][this.type](cursor.value);
 
                             if (!criteria || criteria(item)) {
                                 item.isNew = false;
@@ -99,8 +116,8 @@
         }
 
         async any(criteria: (item: T) => boolean): Promise<boolean> {
-            var transaction = this.database.db.transaction(this.tableName, "readonly");
-            var store = transaction.objectStore(this.tableName);
+            var transaction = this.database.db.transaction(this.table, "readonly");
+            var store = transaction.objectStore(this.table);
 
             return new Promise<boolean>((resolve, reject) => {
                 var request = store.openCursor();
@@ -114,7 +131,7 @@
                         var cursor = request.result;
                         if (cursor) {
 
-                            var item: T = new window["Domain"][this.className](cursor.value);
+                            var item: T = new window["Domain"][this.type](cursor.value);
 
                             if (!criteria || criteria(item)) {
                                 result = true;
@@ -148,8 +165,8 @@
             }
             await item.onSaving();
 
-            var transaction = this.database.db.transaction(this.tableName, "readwrite");
-            var store = transaction.objectStore(this.tableName);
+            var transaction = this.database.db.transaction(this.table, "readwrite");
+            var store = transaction.objectStore(this.table);
 
             return new Promise<T>((resolve, reject) => {
                 store.put(item);
@@ -173,8 +190,8 @@
                     }
                     await item.onSaving();
 
-                    var transaction = this.database.db.transaction(this.tableName, "readwrite");
-                    var store = transaction.objectStore(this.tableName);
+                    var transaction = this.database.db.transaction(this.table, "readwrite");
+                    var store = transaction.objectStore(this.table);
 
                     store.put(item);
                     transaction.oncomplete = () => {
@@ -192,8 +209,8 @@
 
             await item.onDeleting();
 
-            var transaction = this.database.db.transaction(this.tableName, "readwrite");
-            var store = transaction.objectStore(this.tableName);
+            var transaction = this.database.db.transaction(this.table, "readwrite");
+            var store = transaction.objectStore(this.table);
 
             return new Promise<void>((resolve, reject) => {
                 store.delete(item.id);
@@ -207,8 +224,8 @@
             if (!criteria)
                 return;
 
-            var transaction = this.database.db.transaction(this.tableName, "readwrite");
-            var store = transaction.objectStore(this.tableName);
+            var transaction = this.database.db.transaction(this.table, "readwrite");
+            var store = transaction.objectStore(this.table);
 
             return new Promise<void>((resolve, reject) => {
                 var request = store.openCursor();
@@ -220,7 +237,7 @@
                         var cursor = request.result;
                         if (cursor) {
 
-                            var item: T = new window["Domain"][this.className](cursor.value);
+                            var item: T = new window["Domain"][this.type](cursor.value);
 
                             if (criteria(item)) {
                                 store.delete(item.id);

@@ -3,6 +3,8 @@ import './NavController';
 
 export class BaseComponent {
     user: Domain.User;
+    formValidations: Array<MSharp.ResultError> = [];
+
     constructor(public platform: Platform, public events: Events, public nav: NavController, public params: NavParams) {
         window.params = this.params;
         window.events = this.events;
@@ -10,6 +12,10 @@ export class BaseComponent {
         this.events.subscribe('Refresh', async () => {
             await this.ngOnInit();
         });
+    }
+
+    validationFor(propertyName: string): Array<MSharp.ResultError> {
+        return this.formValidations.where(error => error.propertyName == propertyName);
     }
 
     async ngOnInit(): Promise<void> {
