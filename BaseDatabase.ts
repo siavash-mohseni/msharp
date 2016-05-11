@@ -17,9 +17,9 @@
             this.db = await provider.open();
         }
 
-        getTable<T>(table: string): MSharp.DatabaseTable<T> {
-            var info = this.structure.find(t => t.tableName == table);
-            return new MSharp.DatabaseTable<Domain.Campaign>(this, info);
-        }
+		getTable<T extends Entity>(table: string): MSharp.DatabaseTable<T> {
+			var info = this.structure.first(t => t.table == table);
+			return new MSharp.DatabaseTable<T>(this, info);
+		}
     }
 }
