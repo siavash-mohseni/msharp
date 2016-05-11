@@ -1,6 +1,6 @@
 {
   "name": "msharp",
-  "version": "1.0.21",
+  "version": "1.0.22",
   "description": "msharp ionic library",
   "main": "index.ts",
   "scripts": {

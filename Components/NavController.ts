@@ -1,6 +1,6 @@
 ﻿import {Type} from 'angular2/core';
 import {NavOptions, Alert, Modal, ViewController} from 'ionic-angular';
-import {NavController} from './../../../node_modules/ionic-angular/components/nav/nav-controller';
+import {NavController} from './../../ionic-angular/components/nav/nav-controller';
 
 export interface PromptInputOptions {
     type?: string;
@@ -13,7 +13,7 @@ export interface PromptInputOptions {
 }
 
 //NavController Augmentation
-declare module './../../../node_modules/ionic-angular/components/nav/nav-controller' {
+declare module './../../ionic-angular/components/nav/nav-controller' {
     interface NavController {
         //Adding extentions to NacController prototype
         back(opts?: NavOptions): Promise<any>;
