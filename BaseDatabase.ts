@@ -1,6 +1,7 @@
 ﻿namespace MSharp {
     export class BaseDatabase {
 
+        structure: Array<IDatabaseTable>;
         db: IDBDatabase;
 
         /** Specifies the current version of the database schema.
@@ -8,10 +9,10 @@
         * This allows the installed application database to be upgraded. */
         schemaVersion: number;
 
-        async  initialize(dbStructure: Array<IDatabaseTable>): Promise<void> {
+        async  initialize(structure: Array<IDatabaseTable>): Promise<void> {
             var provider = new MSharp.IndexedDbProvider();
             provider.schemaVersion = this.schemaVersion;
-            provider.dbStructure = dbStructure;
+            provider.dbStructure = this.structure = structure;
 
             this.db = await provider.open();
         }
