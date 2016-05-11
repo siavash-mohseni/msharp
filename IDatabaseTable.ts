@@ -1,6 +1,7 @@
 ﻿namespace MSharp {
     export interface IDatabaseTable {
-        tableName: string;
-        indexColumns?: Array<string>;        
+        table: string;
+        type: string;
+        sortable?: boolean;
     }
 }

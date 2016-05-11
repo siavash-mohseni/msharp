@@ -1,11 +1,4 @@
 ﻿namespace MSharp {
-
-    export interface IDatabaseTable {
-        table: string;
-        type: string;
-        sortable?: boolean;
-    }
-
     export class DatabaseTable<T extends Entity> {
 
         table: string;
