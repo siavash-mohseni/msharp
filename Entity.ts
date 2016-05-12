@@ -33,6 +33,12 @@
         }
 
         toString(): string { return '' };
+
+        compareTo(other: Entity): number {
+         if (!other)
+             return 1;
+         return this.toString().localeCompare(other.toString());
+        }
     }
 
     export enum EntityState {

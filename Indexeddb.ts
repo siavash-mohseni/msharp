@@ -46,7 +46,7 @@ namespace MSharp {
 
             for (var table of this.dbStructure) {
 
-                var store = this.db.createObjectStore(table.tableName, { keyPath: "id" });
+                var store = this.db.createObjectStore(table.table, { keyPath: "id" });
 
                 if (table.indexColumns)
                     for (var column of table.indexColumns) {
