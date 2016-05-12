@@ -1,4 +1,6 @@
 ﻿/// <reference path="idatabasetable.ts" />
+﻿/// <reference path="isortable.ts" />
+/// <reference path="iheirarchy.ts" />
 /// <reference path="basedatabase.ts" />
 /// <reference path="databasetable.ts" />
 /// <reference path="entity.ts" />
