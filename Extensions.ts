@@ -8,6 +8,10 @@
     none(change?: (item: T) => boolean): boolean;
     pushRange(...arrays: Array<T>[]): void;
     remove(item: T): Array<T>;
+    except(item: T): Array<T>;
+    selectMany(fn: Function): Array<any>;
+    orderBy(criteria: (item: T) => any): Array<T>;
+    orderByDescending(criteria: (item: T) => any): Array<T>;
 }
 
 Array.prototype.sum = function () {
@@ -90,7 +94,7 @@ Array.prototype.removeNulls = function (): Array<any> {
     return array;
 }
 
-Array.prototype.pushRange = function(...arrays: Array<any>[]) {
+Array.prototype.pushRange = function (...arrays: Array<any>[]) {
     var toPush = this.concat.apply([], arguments);
     for (var i = 0, len = toPush.length; i < len; ++i) {
         this.push(toPush[i]);
@@ -105,6 +109,27 @@ Array.prototype.remove = function (item) {
     return this;
 };
 
+Array.prototype.except = function (item) {
+    return this.where(x => x !== item);
+};
+
+Array.prototype.selectMany = function (fn: Function) {
+    return this.map(fn).reduce(function (x, y) { return x.concat(y); }, []);
+};
+
+Array.prototype.orderBy = function orderBy<TKey>(keySelector: (e: any) => TKey, comparer?: (a: TKey, b: TKey) => number): Array<any> {
+    comparer = comparer || ((a, b) => <any>a > <any>b ? 1 : -1);
+
+    this.sort((l, r) => comparer(keySelector(l), keySelector(r)));
+    return this;
+}
+
+Array.prototype.orderByDescending = function orderBy<TKey>(keySelector: (e: any) => TKey, comparer?: (a: TKey, b: TKey) => number): Array<any> {
+    comparer = comparer || ((a, b) => (<any>a) < (<any>b) ? 1 : -1);
+
+    this.sort((l, r) => comparer(keySelector(l), keySelector(r)));
+    return this;
+}
 
 interface Date {
     toDateTimeString(): string;
@@ -165,12 +190,12 @@ String.prototype.hasValue = function () {
     return !(this.length === 0 || !this.trim());
 }
 
-String.prototype.toHtmlLines = function() {
+String.prototype.toHtmlLines = function () {
     return this.replace(/\\r\\n/g, "<br />");
 }
 
 //String.Format Equivalent in TypeScript
-String.prototype.formatWith = function(...values: any[]) {
+String.prototype.formatWith = function (...values: any[]) {
     var str = this,
         argumentsLength = arguments.length;
 
