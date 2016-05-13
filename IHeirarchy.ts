@@ -32,24 +32,24 @@
                 else return hierarchy.getParent().getFullPath(seperator) + seperator + hierarchy.name;
             }
 
-            type.prototype.withAllChildren = (parent: IHierarchy): Array<IHierarchy> => {
-                return parent.getAllChildren().concat(parent).orderBy(i => i.getFullPath());
-            }
+            // type.prototype.withAllChildren = (parent: IHierarchy): Array<IHierarchy> => {
+            //     return parent.getAllChildren().concat(parent).orderBy(i => i.getFullPath());
+            // }
 
-            type.prototype.getAllChildren = (parent: IHierarchy): Array<IHierarchy> => {
-                return parent.getChildren().except(parent).selectMany(c => c.withAllChildren()).orderBy(i => i.getFullPath());
-            }
+            // type.prototype.getAllChildren = (parent: IHierarchy): Array<IHierarchy> => {
+            //     return parent.getChildren().except(parent).selectMany(c => c.withAllChildren()).orderBy(i => i.getFullPath());
+            // }
 
-            type.prototype.withAllParents = (child: IHierarchy): Array<IHierarchy> => {
-                return child.getAllParents().concat(child).orderBy(i => i.getFullPath());
-            }
+            // type.prototype.withAllParents = (child: IHierarchy): Array<IHierarchy> => {
+            //     return child.getAllParents().concat(child).orderBy(i => i.getFullPath());
+            // }
 
-            type.prototype.getAllParents = (child: IHierarchy): Array<IHierarchy> => {
-                var parent = child.getParent();
-                if (parent == null || parent == child)
-                    return new Array(0);
-                else return parent.withAllParents().orderBy(i => i.getFullPath());
-            }
+            // type.prototype.getAllParents = (child: IHierarchy): Array<IHierarchy> => {
+            //     var parent = child.getParent();
+            //     if (parent == null || parent == child)
+            //         return new Array(0);
+            //     else return parent.withAllParents().orderBy(i => i.getFullPath());
+            // }
         }
     }
 }
